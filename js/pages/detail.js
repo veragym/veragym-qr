@@ -49,19 +49,27 @@ function renderDetail(id, mode) {
   html += '<div class="detail-placeholder illust" style="display:none"><span>자세 일러스트</span></div>';
   html += '</div></div>';
 
-  // 운동 방법 (줄바꿈 기준으로 단계별 리스트 표시)
+  // 운동 방법 (번호 패턴으로 분리 → 조절법과 동일 디자인)
   if (eq.method) {
-    html += '<div class="detail-section">';
-    html += '<h2 class="section-title">운동 방법</h2>';
-    var steps = Array.isArray(eq.method) ? eq.method : eq.method.split('\n').filter(function (s) { return s.trim(); });
-    html += '<ol class="method-list">';
-    steps.forEach(function (m) {
-      // "1. ", "2. " 등 번호 접두사 제거 (CSS counter로 표시)
-      var text = m.replace(/^\d+\.\s*/, '').trim();
-      if (text) html += '<li>' + esc(text) + '</li>';
-    });
-    html += '</ol>';
-    html += '</div>';
+    var steps;
+    if (Array.isArray(eq.method)) {
+      steps = eq.method;
+    } else {
+      // "1. ... 2. ... 3. ..." 패턴을 분리
+      steps = eq.method.split(/(?=\d+\.\s)/).map(function (s) {
+        return s.replace(/^\d+\.\s*/, '').trim();
+      }).filter(function (s) { return s; });
+    }
+    if (steps.length > 0) {
+      html += '<div class="detail-section">';
+      html += '<h2 class="section-title">운동 방법</h2>';
+      html += '<div class="adjust-card">';
+      html += '<ul class="method-steps">';
+      steps.forEach(function (m, i) {
+        html += '<li><span class="method-num">' + (i + 1) + '</span>' + esc(m) + '</li>';
+      });
+      html += '</ul></div></div>';
+    }
   }
 
   // 트레이너 팁

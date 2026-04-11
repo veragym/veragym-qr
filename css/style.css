@@ -329,6 +329,32 @@ body {
   top: 1px;
   font-size: 12px;
 }
+/* 운동 방법 스텝 리스트 (adjust-card 안) */
+.method-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.method-steps li {
+  font: var(--text-body);
+  color: var(--color-text-primary);
+  padding-left: 28px;
+  position: relative;
+  word-break: keep-all;
+}
+
+.method-num {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+  color: var(--color-accent);
+  width: 20px;
+  text-align: center;
+}
+
 .method-text {
   font: var(--text-body);
   color: var(--color-text-secondary);
