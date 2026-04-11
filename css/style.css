@@ -766,7 +766,6 @@ body {
   color: var(--color-error);
   cursor: pointer;
   flex-shrink: 0;
-  margin-left: auto;
 }
 
 .set-remove-btn:active {

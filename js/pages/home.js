@@ -4,7 +4,17 @@ function renderHome() {
   updateHeader('전체 운동기구', '기구를 선택해 사용법을 확인하세요');
   setActiveTab('home');
   var app = document.getElementById('app');
-  app.innerHTML = renderEquipmentGrid(EQUIPMENT);
+
+  // 부위별 순서 정의, 각 부위 내에서 ㄱ~ㅎ 정렬
+  var partOrder = { '가슴': 0, '어깨': 1, '등': 2, '팔': 3, '하체': 4 };
+  var sorted = EQUIPMENT.slice().sort(function (a, b) {
+    var pa = partOrder[a.bodypartName] !== undefined ? partOrder[a.bodypartName] : 99;
+    var pb = partOrder[b.bodypartName] !== undefined ? partOrder[b.bodypartName] : 99;
+    if (pa !== pb) return pa - pb;
+    return a.name.localeCompare(b.name, 'ko');
+  });
+
+  app.innerHTML = renderEquipmentGrid(sorted);
 }
 
 function renderEquipmentGrid(list, mode) {
