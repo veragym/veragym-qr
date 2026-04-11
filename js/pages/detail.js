@@ -49,19 +49,18 @@ function renderDetail(id, mode) {
   html += '<div class="detail-placeholder illust" style="display:none"><span>자세 일러스트</span></div>';
   html += '</div></div>';
 
-  // 운동 방법 (method가 문자열이면 단일 표시, 배열이면 리스트)
+  // 운동 방법 (줄바꿈 기준으로 단계별 리스트 표시)
   if (eq.method) {
     html += '<div class="detail-section">';
     html += '<h2 class="section-title">운동 방법</h2>';
-    if (Array.isArray(eq.method)) {
-      html += '<ol class="method-list">';
-      eq.method.forEach(function (m) {
-        html += '<li>' + esc(m) + '</li>';
-      });
-      html += '</ol>';
-    } else {
-      html += '<p class="method-text">' + esc(eq.method) + '</p>';
-    }
+    var steps = Array.isArray(eq.method) ? eq.method : eq.method.split('\n').filter(function (s) { return s.trim(); });
+    html += '<ol class="method-list">';
+    steps.forEach(function (m) {
+      // "1. ", "2. " 등 번호 접두사 제거 (CSS counter로 표시)
+      var text = m.replace(/^\d+\.\s*/, '').trim();
+      if (text) html += '<li>' + esc(text) + '</li>';
+    });
+    html += '</ol>';
     html += '</div>';
   }
 
