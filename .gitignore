@@ -1,0 +1,10 @@
+# Development tools
+.claude/
+tools/
+equipment-preview-data.json
+equipment-preview.html
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
