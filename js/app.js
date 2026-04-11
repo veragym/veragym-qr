@@ -20,6 +20,9 @@ function router() {
   var path = parsed.path;
   var params = parsed.params;
 
+  // 페이지 전환 시 스크롤 최상단으로
+  window.scrollTo(0, 0);
+
   // 데이터 로딩 전이면 로딩 화면 표시
   if (!_equipmentLoaded) {
     var app = document.getElementById('app');
