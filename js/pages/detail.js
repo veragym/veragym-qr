@@ -10,6 +10,12 @@ function renderDetail(id, mode) {
 
   // 부모 기구이고 자식 운동이 있으면 → 자식 목록 표시
   if (!eq.parent_id && hasChildren(eq.id)) {
+    var children = getChildrenByParent(eq.id);
+    // 자식이 1개면 바로 그 운동 상세로
+    if (children.length === 1) {
+      renderDetail(children[0].id, mode);
+      return;
+    }
     renderParentDetail(eq);
     return;
   }
