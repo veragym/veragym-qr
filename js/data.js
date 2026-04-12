@@ -70,7 +70,8 @@ async function loadEquipmentFromDB() {
         image: 'images/equipment/' + row.file_name + '.png',
         illustration: 'images/illustrations/' + row.file_name + '.png',
         adjustment: row.adjustments || [],
-        trainerTips: row.trainer_tips || []
+        trainerTips: row.trainer_tips || [],
+        parent_id: row.parent_id || null
       };
     });
 
@@ -136,4 +137,31 @@ function getEquipmentById(id) {
 
 function getEquipmentByBodypart(part) {
   return EQUIPMENT.filter(function (e) { return e.bodypart === part; });
+}
+
+/* ── 부모/자식 관련 함수 ── */
+
+function getParentEquipment() {
+  return EQUIPMENT.filter(function (e) { return !e.parent_id; });
+}
+
+function getChildrenByParent(parentId) {
+  return EQUIPMENT.filter(function (e) { return e.parent_id === parentId; });
+}
+
+function hasChildren(id) {
+  for (var i = 0; i < EQUIPMENT.length; i++) {
+    if (EQUIPMENT[i].parent_id === id) return true;
+  }
+  return false;
+}
+
+function getEquipmentByBodypartAll(part) {
+  // 부위별 탭: 해당 부위의 부모기구 + 자식운동(부모 제외) 모두 표시
+  return EQUIPMENT.filter(function (e) {
+    if (e.bodypart !== part) return false;
+    // 자식 운동이 있는 부모는 제외 (자식들이 개별로 나옴)
+    if (!e.parent_id && hasChildren(e.id)) return false;
+    return true;
+  });
 }

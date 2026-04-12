@@ -7,11 +7,28 @@ function renderDetail(id, mode) {
     renderNotFound();
     return;
   }
+
+  // 부모 기구이고 자식 운동이 있으면 → 자식 목록 표시
+  if (!eq.parent_id && hasChildren(eq.id)) {
+    renderParentDetail(eq);
+    return;
+  }
+
   updateHeader(eq.name, eq.bodypartName + ' \u00B7 ' + eq.primaryMuscle);
   setActiveTab(mode === 'record' ? 'records' : '');
   var app = document.getElementById('app');
 
   var html = '<div class="detail-page">';
+
+  // 자식 운동이면 부모 기구로 돌아가기 버튼
+  if (eq.parent_id) {
+    var parentEq = getEquipmentById(eq.parent_id);
+    if (parentEq) {
+      html += '<button class="back-to-parent" onclick="location.hash=\'#/equipment/' + esc(eq.parent_id) + '\'">';
+      html += '<span class="back-arrow">&lsaquo;</span> ' + esc(parentEq.name) + ' 목록으로';
+      html += '</button>';
+    }
+  }
 
   if (mode === 'record') {
     // 기록 모드: 설명은 접힘 상태
@@ -411,6 +428,83 @@ async function deleteRecord(date, equipmentId) {
     console.error('deleteRecord failed:', e);
     showToast('오류가 발생했습니다.');
   }
+}
+
+function renderParentDetail(eq) {
+  updateHeader(eq.name, '운동을 선택하세요');
+  setActiveTab('');
+  var app = document.getElementById('app');
+  var children = getChildrenByParent(eq.id);
+
+  // 부위별 그룹핑
+  var partOrder = { '가슴': 0, '어깨': 1, '등': 2, '팔': 3, '하체': 4, '코어': 5 };
+  var groups = {};
+  children.forEach(function (c) {
+    var cat = c.bodypartName;
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(c);
+  });
+  var sortedParts = Object.keys(groups).sort(function (a, b) {
+    var pa = partOrder[a] !== undefined ? partOrder[a] : 99;
+    var pb = partOrder[b] !== undefined ? partOrder[b] : 99;
+    return pa - pb;
+  });
+
+  var html = '<div class="parent-detail-page">';
+
+  // 기구 이미지
+  html += '<div class="parent-hero">';
+  html += '<img src="' + esc(eq.image) + '" alt="' + esc(eq.name) + '" loading="lazy">';
+  html += '</div>';
+
+  // 부위별 탭 필터
+  html += '<div class="child-filter">';
+  html += '<button class="child-filter-btn active" onclick="filterChildren(\'all\')">전체 <span class="filter-count">' + children.length + '</span></button>';
+  sortedParts.forEach(function (part) {
+    html += '<button class="child-filter-btn" onclick="filterChildren(\'' + esc(part) + '\')">' + esc(part) + ' <span class="filter-count">' + groups[part].length + '</span></button>';
+  });
+  html += '</div>';
+
+  // 자식 운동 목록
+  html += '<div class="child-exercise-list" id="child-exercise-list">';
+  sortedParts.forEach(function (part) {
+    groups[part].sort(function (a, b) { return a.name.localeCompare(b.name, 'ko'); });
+    groups[part].forEach(function (c) {
+      html += '<div class="child-exercise-item" data-bodypart="' + esc(c.bodypartName) + '" onclick="location.hash=\'#/equipment/' + esc(c.id) + '\'">';
+      html += '<div class="child-illust">';
+      html += '<img src="' + esc(c.illustration) + '" alt="' + esc(c.name) + '" loading="lazy" onerror="this.style.display=\'none\'">';
+      html += '</div>';
+      html += '<div class="child-info">';
+      html += '<p class="child-name">' + esc(c.name) + '</p>';
+      html += '<div class="child-meta">';
+      html += '<span class="card-tag">' + esc(c.bodypartName) + '</span>';
+      html += '<span class="child-muscle">' + esc(c.primaryMuscle) + '</span>';
+      html += '</div>';
+      html += '</div>';
+      html += '<span class="child-arrow">&rsaquo;</span>';
+      html += '</div>';
+    });
+  });
+  html += '</div>';
+
+  html += '<div class="nav-spacer"></div>';
+  html += '</div>';
+  app.innerHTML = html;
+}
+
+function filterChildren(part) {
+  var btns = document.querySelectorAll('.child-filter-btn');
+  btns.forEach(function (b) { b.classList.remove('active'); });
+  event.target.closest('.child-filter-btn').classList.add('active');
+
+  var items = document.querySelectorAll('.child-exercise-item');
+  items.forEach(function (item) {
+    if (part === 'all' || item.dataset.bodypart === part) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 }
 
 function renderNotFound() {

@@ -7,7 +7,7 @@ function renderBodypart() {
 
   var html = '<div class="bodypart-grid">';
   BODYPARTS.forEach(function (bp) {
-    var count = getEquipmentByBodypart(bp.id).length;
+    var count = getEquipmentByBodypartAll(bp.id).length;
     html += '<div class="bodypart-card" onclick="location.hash=\'#/bodypart/' + esc(bp.id) + '\'">';
     html += '<div class="bp-img-wrap">';
     html += '<img src="images/bodyparts/' + esc(bp.id) + '.svg" alt="' + esc(bp.name) + '" loading="lazy">';

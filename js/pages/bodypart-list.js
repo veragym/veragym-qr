@@ -15,6 +15,6 @@ function renderBodypartList(part) {
   }
   updateHeader(bp.name + ' 운동기구', '해당 부위 기구를 확인하세요');
   setActiveTab('bodypart');
-  var list = getEquipmentByBodypart(part);
+  var list = getEquipmentByBodypartAll(part);
   document.getElementById('app').innerHTML = renderEquipmentGrid(list);
 }
