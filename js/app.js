@@ -1,5 +1,16 @@
 /* app.js — SPA 라우터 + 초기화 */
 
+/* ── 전역 에러 핸들러 ── */
+window.onerror = function (msg, src, line) {
+  console.error('Global error:', msg, src, line);
+  if (typeof showToast === 'function') showToast('오류가 발생했습니다. 새로고침해주세요.');
+  return false;
+};
+window.addEventListener('unhandledrejection', function (e) {
+  console.error('Unhandled promise rejection:', e.reason);
+  if (typeof showToast === 'function') showToast('네트워크 오류가 발생했습니다.');
+});
+
 function parseHashQuery(path) {
   var idx = path.indexOf('?');
   if (idx === -1) return { path: path, params: {} };
@@ -33,7 +44,8 @@ function router() {
   // #/equipment/:id?mode=record
   if (path.indexOf('/equipment/') === 0) {
     var eqId = path.replace('/equipment/', '');
-    var mode = params.mode || 'normal';
+    if (!/^[a-zA-Z0-9_-]+$/.test(eqId)) { renderNotFound(); return; }
+    var mode = (params.mode === 'record') ? 'record' : 'normal';
     renderDetail(eqId, mode);
     return;
   }
@@ -66,26 +78,32 @@ function router() {
 window.addEventListener('hashchange', router);
 
 document.addEventListener('DOMContentLoaded', async function () {
-  initDB();
-  initNav();
+  try {
+    initDB();
+    initNav();
 
-  // DB에서 기구 데이터 로딩
-  var loaded = await loadEquipmentFromDB();
-  if (!loaded) {
-    var app = document.getElementById('app');
-    if (app) app.innerHTML = '<div class="empty-state">기구 데이터를 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.</div>';
-    return;
-  }
-
-  if (!location.hash || location.hash === '#' || location.hash === '#/') {
-    var hasNotice = await hasActiveNotice();
-    if (hasNotice) {
-      location.hash = '#/notice';
-    } else {
-      location.hash = '#/home';
+    // DB에서 기구 데이터 로딩
+    var loaded = await loadEquipmentFromDB();
+    if (!loaded) {
+      var app = document.getElementById('app');
+      if (app) app.innerHTML = '<div class="empty-state">기구 데이터를 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.</div>';
+      return;
     }
-  } else {
-    router();
+
+    if (!location.hash || location.hash === '#' || location.hash === '#/') {
+      var hasNotice = await hasActiveNotice();
+      if (hasNotice) {
+        location.hash = '#/notice';
+      } else {
+        location.hash = '#/home';
+      }
+    } else {
+      router();
+    }
+  } catch (e) {
+    console.error('App init failed:', e);
+    var app = document.getElementById('app');
+    if (app) app.innerHTML = '<div class="empty-state">앱 초기화에 실패했습니다.<br>페이지를 새로고침해주세요.</div>';
   }
 });
 
@@ -96,7 +114,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 */
-// 개발 중: 기존 SW + 캐시 완전 제거
+/* SW 클린업 — 필요 시 수동 활성화
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function (regs) {
     regs.forEach(function (r) { r.unregister(); });
@@ -107,3 +125,4 @@ if ('caches' in window) {
     names.forEach(function (n) { caches.delete(n); });
   });
 }
+*/

@@ -2,6 +2,13 @@
 
 function renderDetail(id, mode) {
   mode = mode || 'normal';
+
+  // 페이지 전환 시 상태 초기화
+  _recordInputOpen = false;
+  _currentSets = [{ weight: '', reps: '' }];
+  _editSetsData = {};
+  _editWeightMode = {};
+
   var eq = getEquipmentById(id);
   if (!eq) {
     renderNotFound();
@@ -103,7 +110,7 @@ function renderDetail(id, mode) {
   html += '<div class="muscle-group">';
   html += '<span class="muscle-label">주동근</span>';
   html += '<div class="muscle-tags">';
-  eq.primaryMuscle.split(',').forEach(function (m) {
+  (eq.primaryMuscle || '').split(',').forEach(function (m) {
     m = m.trim();
     if (m) html += '<span class="muscle-tag">' + esc(m) + '</span>';
   });
@@ -164,6 +171,7 @@ var _recordInputOpen = false;
 var _currentSets = [{ weight: '', reps: '' }];
 var _currentWeightMode = 'total';
 var _editWeightMode = {};
+var _saveInProgress = false;
 
 function getWeightModePref(equipmentId) {
   return localStorage.getItem('wm_' + equipmentId) || 'total';
@@ -234,6 +242,16 @@ function syncSetValues() {
 }
 
 async function saveRecord(equipmentId) {
+  if (_saveInProgress) return;
+  _saveInProgress = true;
+  try {
+    await _doSaveRecord(equipmentId);
+  } finally {
+    _saveInProgress = false;
+  }
+}
+
+async function _doSaveRecord(equipmentId) {
   var phone = getStoredPhone();
   if (!phone) {
     showToast('전화번호를 먼저 등록해주세요.');
@@ -324,7 +342,9 @@ function startEditRecord(date, equipmentId) {
   var dateItems = listArea.querySelectorAll('.record-date-group');
   dateItems.forEach(function (group) {
     if (group.dataset.date === date) {
-      var setsData = JSON.parse(group.dataset.sets || '[]');
+      var setsData;
+      try { setsData = JSON.parse(group.dataset.sets || '[]'); }
+      catch (e) { console.error('sets parse error:', e); setsData = []; }
       var wm = group.dataset.weightMode || 'total';
       _editSetsData[date] = setsData;
       _editWeightMode[date] = wm;
@@ -456,9 +476,9 @@ function renderParentDetail(eq, mode) {
 
   // 부위별 탭 필터
   html += '<div class="child-filter">';
-  html += '<button class="child-filter-btn active" onclick="filterChildren(\'all\')">전체 <span class="filter-count">' + children.length + '</span></button>';
+  html += '<button class="child-filter-btn active" onclick="filterChildren(\'all\', event)">전체 <span class="filter-count">' + children.length + '</span></button>';
   sortedParts.forEach(function (part) {
-    html += '<button class="child-filter-btn" onclick="filterChildren(\'' + esc(part) + '\')">' + esc(part) + ' <span class="filter-count">' + groups[part].length + '</span></button>';
+    html += '<button class="child-filter-btn" onclick="filterChildren(\'' + esc(part) + '\', event)">' + esc(part) + ' <span class="filter-count">' + groups[part].length + '</span></button>';
   });
   html += '</div>';
 
@@ -490,10 +510,12 @@ function renderParentDetail(eq, mode) {
   app.innerHTML = html;
 }
 
-function filterChildren(part) {
+function filterChildren(part, evt) {
   var btns = document.querySelectorAll('.child-filter-btn');
   btns.forEach(function (b) { b.classList.remove('active'); });
-  event.target.closest('.child-filter-btn').classList.add('active');
+  if (evt && evt.target) {
+    evt.target.closest('.child-filter-btn').classList.add('active');
+  }
 
   var items = document.querySelectorAll('.child-exercise-item');
   items.forEach(function (item) {

@@ -113,30 +113,13 @@ function mapBodypartCategory(part) {
   return map[part] || part;
 }
 
-/* ── 부위별 이모지 매핑 ── */
-
-function getBodypartEmoji(part) {
-  var map = {
-    '가슴': '🫁', '어깨': '🏋️', '등': '🔙', '팔': '💪',
-    '하체 전체': '🦵', '엉덩이': '🍑', '허벅지 앞쪽': '🦵',
-    '허벅지 뒤쪽': '🦵', '허벅지 안쪽': '🦵', '허벅지 바깥쪽': '🦵',
-    '가슴/팔': '🫁', '등/팔': '🔙', '가슴(상부)': '🫁',
-    '어깨 후면': '🏋️'
-  };
-  return map[part] || '💪';
-}
-
-/* ── 조회 함수 (기존 호환) ── */
+/* ── 조회 함수 ── */
 
 function getEquipmentById(id) {
   for (var i = 0; i < EQUIPMENT.length; i++) {
     if (EQUIPMENT[i].id === id) return EQUIPMENT[i];
   }
   return null;
-}
-
-function getEquipmentByBodypart(part) {
-  return EQUIPMENT.filter(function (e) { return e.bodypart === part; });
 }
 
 /* ── 부모/자식 관련 함수 ── */

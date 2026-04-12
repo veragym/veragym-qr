@@ -5,9 +5,11 @@ var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 var db = null;
 
 function initDB() {
-  if (window.supabase) {
-    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  if (!window.supabase) {
+    console.error('Supabase library not loaded. Check network/CDN.');
+    return;
   }
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 }
 
 function esc(str) {
@@ -41,12 +43,7 @@ function showToast(msg, duration) {
 /* ── 타임존 유틸 ── */
 
 function getKSTDate() {
-  var d = new Date();
-  d.setMinutes(d.getMinutes() + d.getTimezoneOffset() + 540);
-  var y = d.getFullYear();
-  var m = String(d.getMonth() + 1).padStart(2, '0');
-  var day = String(d.getDate()).padStart(2, '0');
-  return y + '-' + m + '-' + day;
+  return new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
 }
 
 /* ── 전화번호 유틸 ── */
@@ -75,9 +72,13 @@ function setStoredPhone(phone) {
 
 async function upsertMember(phone) {
   if (!db) return { data: null, error: { message: 'DB not initialized' } };
-  var res = await db.from('qr_members')
-    .upsert({ phone: phone }, { onConflict: 'phone' });
-  return res;
+  try {
+    return await db.from('qr_members')
+      .upsert({ phone: phone }, { onConflict: 'phone' });
+  } catch (e) {
+    console.error('upsertMember failed:', e);
+    return { data: null, error: e };
+  }
 }
 
 async function checkMemberExists(phone) {
@@ -98,19 +99,23 @@ async function checkMemberExists(phone) {
 async function saveWorkoutSets(phone, equipmentId, date, sets, weightMode) {
   if (!db) return { data: null, error: { message: 'DB not initialized' } };
   weightMode = weightMode || 'total';
-  var rows = sets.map(function (s, i) {
-    return {
-      phone: phone,
-      equipment_id: equipmentId,
-      workout_date: date,
-      set_number: i + 1,
-      weight_kg: parseFloat(s.weight) || 0,
-      reps: parseInt(s.reps) || 0,
-      weight_mode: weightMode
-    };
-  });
-  var res = await db.from('qr_workout_logs').insert(rows);
-  return res;
+  try {
+    var rows = sets.map(function (s, i) {
+      return {
+        phone: phone,
+        equipment_id: equipmentId,
+        workout_date: date,
+        set_number: i + 1,
+        weight_kg: parseFloat(s.weight) || 0,
+        reps: parseInt(s.reps) || 0,
+        weight_mode: weightMode
+      };
+    });
+    return await db.from('qr_workout_logs').insert(rows);
+  } catch (e) {
+    console.error('saveWorkoutSets failed:', e);
+    return { data: null, error: e };
+  }
 }
 
 async function getWorkoutLogs(phone, equipmentId) {
@@ -180,12 +185,16 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
 
     // Step 3: 음수 set_number를 양수로 변환
     for (var i = 0; i < sets.length; i++) {
-      await db.from('qr_workout_logs')
+      var upRes = await db.from('qr_workout_logs')
         .update({ set_number: i + 1 })
         .eq('phone', phone)
         .eq('equipment_id', equipmentId)
         .eq('workout_date', date)
         .eq('set_number', -(i + 1));
+      if (upRes.error) {
+        console.error('set_number update failed for set', i + 1, upRes.error);
+        throw upRes.error;
+      }
     }
 
     return { data: null, error: null };
@@ -198,10 +207,14 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
 
 async function deleteWorkoutDate(phone, equipmentId, date) {
   if (!db) return { error: { message: 'DB not initialized' } };
-  var res = await db.from('qr_workout_logs')
-    .delete()
-    .eq('phone', phone)
-    .eq('equipment_id', equipmentId)
-    .eq('workout_date', date);
-  return res;
+  try {
+    return await db.from('qr_workout_logs')
+      .delete()
+      .eq('phone', phone)
+      .eq('equipment_id', equipmentId)
+      .eq('workout_date', date);
+  } catch (e) {
+    console.error('deleteWorkoutDate failed:', e);
+    return { data: null, error: e };
+  }
 }

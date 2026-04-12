@@ -3,7 +3,8 @@
 function updateHeader(title, subtitle) {
   var h = document.getElementById('top-header');
   if (!h) return;
-  h.querySelector('h1').textContent = title || '';
+  var h1 = h.querySelector('h1');
+  if (h1) h1.textContent = title || '';
   var p = h.querySelector('p');
   if (subtitle) {
     p.textContent = subtitle;

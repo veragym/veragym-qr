@@ -17,6 +17,7 @@ function renderHome() {
   app.innerHTML = renderEquipmentGrid(sorted);
 }
 
+/* 공유 함수: records.js, bodypart-list.js에서도 호출됨 */
 function renderEquipmentGrid(list, mode) {
   if (!list || list.length === 0) {
     return '<div class="empty-state">등록된 기구가 없습니다.</div>';

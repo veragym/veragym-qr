@@ -27,13 +27,19 @@ function initNav() {
     } else if (tab === 'back') {
       // hash 히스토리가 있으면 뒤로, 없으면 홈으로
       var prevHash = location.hash;
+      var backHandled = false;
+      var onHashChange = function () {
+        backHandled = true;
+        window.removeEventListener('hashchange', onHashChange);
+      };
+      window.addEventListener('hashchange', onHashChange);
       history.back();
-      // 100ms 후에도 hash가 안 바뀌었으면 앱 밖으로 나간 것 → 홈으로
       setTimeout(function () {
-        if (location.hash === prevHash || !location.hash || location.hash === '#') {
+        window.removeEventListener('hashchange', onHashChange);
+        if (!backHandled || !location.hash || location.hash === '#') {
           location.hash = '#/home';
         }
-      }, 150);
+      }, 300);
     }
   });
 }
