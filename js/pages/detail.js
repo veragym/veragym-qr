@@ -20,16 +20,6 @@ function renderDetail(id, mode) {
 
   var html = '<div class="detail-page">';
 
-  // 자식 운동이면 부모 기구로 돌아가기 버튼
-  if (eq.parent_id) {
-    var parentEq = getEquipmentById(eq.parent_id);
-    if (parentEq) {
-      html += '<button class="back-to-parent" onclick="location.hash=\'#/equipment/' + esc(eq.parent_id) + '\'">';
-      html += '<span class="back-arrow">&lsaquo;</span> ' + esc(parentEq.name) + ' 목록으로';
-      html += '</button>';
-    }
-  }
-
   if (mode === 'record') {
     // 기록 모드: 설명은 접힘 상태
     html += '<div class="detail-section">';

@@ -1116,22 +1116,3 @@ body {
   font-weight: 300;
 }
 
-/* 자식 운동 → 부모 목록 돌아가기 버튼 */
-.back-to-parent {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 0;
-  margin-bottom: 8px;
-  background: none;
-  border: none;
-  color: var(--color-accent-text);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.back-to-parent .back-arrow {
-  font-size: 20px;
-  font-weight: 300;
-}
