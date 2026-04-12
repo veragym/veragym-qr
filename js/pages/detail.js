@@ -16,7 +16,7 @@ function renderDetail(id, mode) {
       renderDetail(children[0].id, mode);
       return;
     }
-    renderParentDetail(eq);
+    renderParentDetail(eq, mode);
     return;
   }
 
@@ -426,9 +426,10 @@ async function deleteRecord(date, equipmentId) {
   }
 }
 
-function renderParentDetail(eq) {
+function renderParentDetail(eq, mode) {
+  mode = mode || 'normal';
   updateHeader(eq.name, '운동을 선택하세요');
-  setActiveTab('');
+  setActiveTab(mode === 'record' ? 'records' : '');
   var app = document.getElementById('app');
   var children = getChildrenByParent(eq.id);
 
@@ -466,7 +467,8 @@ function renderParentDetail(eq) {
   sortedParts.forEach(function (part) {
     groups[part].sort(function (a, b) { return a.name.localeCompare(b.name, 'ko'); });
     groups[part].forEach(function (c) {
-      html += '<div class="child-exercise-item" data-bodypart="' + esc(c.bodypartName) + '" onclick="location.hash=\'#/equipment/' + esc(c.id) + '\'">';
+      var childHref = mode === 'record' ? '#/equipment/' + esc(c.id) + '?mode=record' : '#/equipment/' + esc(c.id);
+      html += '<div class="child-exercise-item" data-bodypart="' + esc(c.bodypartName) + '" onclick="location.hash=\'' + childHref + '\'">';
       html += '<div class="child-illust">';
       html += '<img src="' + esc(c.illustration) + '" alt="' + esc(c.name) + '" loading="lazy" onerror="this.style.display=\'none\'">';
       html += '</div>';

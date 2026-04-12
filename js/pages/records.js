@@ -94,6 +94,13 @@ function renderRecordEquipmentList() {
     return;
   }
 
-  // home.js의 renderEquipmentGrid 재사용, mode=record 링크로 변경
-  app.innerHTML = renderEquipmentGrid(EQUIPMENT, 'record');
+  // 부모 기구만 표시 (홈과 동일), mode=record 링크로 변경
+  var partOrder = { '가슴': 0, '어깨': 1, '등': 2, '팔': 3, '하체': 4, '코어': 5 };
+  var sorted = getParentEquipment().slice().sort(function (a, b) {
+    var pa = partOrder[a.bodypartName] !== undefined ? partOrder[a.bodypartName] : 99;
+    var pb = partOrder[b.bodypartName] !== undefined ? partOrder[b.bodypartName] : 99;
+    if (pa !== pb) return pa - pb;
+    return a.name.localeCompare(b.name, 'ko');
+  });
+  app.innerHTML = renderEquipmentGrid(sorted, 'record');
 }
