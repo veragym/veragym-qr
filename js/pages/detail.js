@@ -395,6 +395,24 @@ async function saveEditRecord(date, equipmentId) {
   }
 }
 
+async function deleteRecord(date, equipmentId) {
+  if (!confirm(date.replace(/-/g, '.') + ' 기록을 삭제하시겠습니까?')) return;
+  var phone = getStoredPhone();
+  if (!phone) return;
+  try {
+    var res = await deleteWorkoutDate(phone, equipmentId, date);
+    if (res.error) {
+      showToast('삭제에 실패했습니다.');
+      return;
+    }
+    showToast('기록이 삭제되었습니다.');
+    loadRecordList(equipmentId);
+  } catch (e) {
+    console.error('deleteRecord failed:', e);
+    showToast('오류가 발생했습니다.');
+  }
+}
+
 function renderNotFound() {
   updateHeader('오류', '');
   setActiveTab('');

@@ -196,7 +196,6 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
   }
 }
 
-/* deleteWorkoutDate — 향후 삭제 기능용 (현재 미사용, 필요 시 활성화)
 async function deleteWorkoutDate(phone, equipmentId, date) {
   if (!db) return { error: { message: 'DB not initialized' } };
   var res = await db.from('qr_workout_logs')
@@ -206,4 +205,3 @@ async function deleteWorkoutDate(phone, equipmentId, date) {
     .eq('workout_date', date);
   return res;
 }
-*/

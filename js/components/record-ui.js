@@ -95,7 +95,10 @@ function renderRecordList(logs, equipmentId) {
       html += '</div>';
     });
     html += '</div>';
+    html += '<div class="record-action-btns">';
     html += '<button class="btn-edit-record" onclick="startEditRecord(\'' + esc(date) + '\',\'' + esc(equipmentId) + '\')">수정</button>';
+    html += '<button class="btn-delete-record" onclick="deleteRecord(\'' + esc(date) + '\',\'' + esc(equipmentId) + '\')">삭제</button>';
+    html += '</div>';
     html += '</div>';
     html += '</div>';
   });

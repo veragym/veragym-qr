@@ -929,8 +929,36 @@ body {
   transition: background 0.15s;
 }
 
-.btn-edit-record:active {
+.btn-edit-record:active,
+.btn-delete-record:active {
   background: var(--color-surface-hover);
+}
+
+.record-action-btns {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.record-action-btns .btn-edit-record,
+.record-action-btns .btn-delete-record {
+  flex: 1;
+  margin-top: 0;
+}
+
+.btn-delete-record {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid var(--color-error);
+  border-radius: 8px;
+  font: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-error);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 /* ── Phase 2: 수정 모드 ── */
