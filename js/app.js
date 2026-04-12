@@ -34,6 +34,12 @@ function router() {
   // 페이지 전환 시 스크롤 최상단으로
   window.scrollTo(0, 0);
 
+  // QR 세션 만료 체크
+  if (!isSessionValid()) {
+    renderExpiredScreen();
+    return;
+  }
+
   // 데이터 로딩 전이면 로딩 화면 표시
   if (!_equipmentLoaded) {
     var app = document.getElementById('app');
@@ -79,6 +85,18 @@ window.addEventListener('hashchange', router);
 
 document.addEventListener('DOMContentLoaded', async function () {
   try {
+    // QR 스캔 감지: ?branch= 파라미터가 있으면 새 세션 시작
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('branch')) {
+      startSession();
+    }
+
+    // 세션 없으면 만료 화면
+    if (!isSessionValid()) {
+      renderExpiredScreen();
+      return;
+    }
+
     initDB();
     initNav();
 

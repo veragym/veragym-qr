@@ -239,6 +239,40 @@ body {
   height: 200px;
 }
 
+/* ── 세션 만료 화면 ── */
+.session-expired {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+.expired-icon {
+  font-size: 64px;
+  margin-bottom: var(--spacing-lg);
+}
+.expired-title {
+  font: var(--text-title);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+.expired-desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-xl);
+}
+.expired-info {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  background: var(--color-surface);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--color-border);
+}
+
 .detail-photo-wrap {
   width: 100%;
   aspect-ratio: 16/9;

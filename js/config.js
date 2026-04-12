@@ -67,6 +67,51 @@ function setStoredPhone(phone) {
   localStorage.setItem('veragym_qr_phone', phone);
 }
 
+/* ── QR 세션 관리 (3시간 제한) ── */
+var SESSION_LIMIT_MS = 3 * 60 * 60 * 1000; // 3시간
+
+function startSession() {
+  localStorage.setItem('veragym_qr_session', Date.now().toString());
+}
+
+function getSessionStart() {
+  var t = localStorage.getItem('veragym_qr_session');
+  return t ? parseInt(t, 10) : 0;
+}
+
+function isSessionValid() {
+  var start = getSessionStart();
+  if (!start) return false;
+  return (Date.now() - start) < SESSION_LIMIT_MS;
+}
+
+function getSessionRemaining() {
+  var start = getSessionStart();
+  if (!start) return 0;
+  var remaining = SESSION_LIMIT_MS - (Date.now() - start);
+  return remaining > 0 ? remaining : 0;
+}
+
+function clearSession() {
+  localStorage.removeItem('veragym_qr_session');
+}
+
+function renderExpiredScreen() {
+  var app = document.getElementById('app');
+  if (!app) return;
+  var header = document.getElementById('top-header');
+  if (header) header.style.display = 'none';
+  var nav = document.getElementById('bottom-nav');
+  if (nav) nav.style.display = 'none';
+
+  app.innerHTML = '<div class="session-expired">' +
+    '<div class="expired-icon">⏰</div>' +
+    '<h2 class="expired-title">이용 시간이 만료되었습니다</h2>' +
+    '<p class="expired-desc">헬스장 기구의 QR 코드를<br>다시 스캔해주세요</p>' +
+    '<div class="expired-info">이용 시간: 3시간</div>' +
+    '</div>';
+}
+
 /* ── Supabase 쿼리 함수 (Phase 2 — 운동 기록) ── */
 /* TODO: RLS 정책 강화 — 현재 anon open 상태 (Phase 3에서 Edge Function 프록시 도입 예정) */
 
