@@ -10,8 +10,7 @@ function renderBodypart() {
     var count = getEquipmentByBodypart(bp.id).length;
     html += '<div class="bodypart-card" onclick="location.hash=\'#/bodypart/' + esc(bp.id) + '\'">';
     html += '<div class="bp-img-wrap">';
-    html += '<img src="images/bodyparts/' + esc(bp.id) + '.png" alt="' + esc(bp.name) + '" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
-    html += '<div class="bp-placeholder" style="display:none"><span>' + bp.emoji + '</span></div>';
+    html += '<img src="images/bodyparts/' + esc(bp.id) + '.svg" alt="' + esc(bp.name) + '" loading="lazy">';
     html += '</div>';
     html += '<div class="card-body">';
     html += '<p class="card-name">' + esc(bp.name) + '</p>';

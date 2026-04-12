@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 320" width="200" height="320">
+  <!-- Head -->
+  <circle cx="100" cy="40" r="24" fill="#D1D5DB"/>
+  <!-- Neck -->
+  <rect x="90" y="64" width="20" height="14" rx="4" fill="#D1D5DB"/>
+  <!-- Torso -->
+  <path d="M60 78 Q60 76 62 76 L138 76 Q140 76 140 78 L144 180 Q144 184 140 184 L60 184 Q56 184 56 180 Z" fill="#D1D5DB"/>
+  <!-- Left arm highlight -->
+  <path d="M56 80 Q46 80 44 90 L34 160 Q32 168 38 170 L46 172 Q52 172 54 164 L62 100" fill="#3B82F6" opacity="0.85"/>
+  <!-- Right arm highlight -->
+  <path d="M144 80 Q154 80 156 90 L166 160 Q168 168 162 170 L154 172 Q148 172 146 164 L138 100" fill="#3B82F6" opacity="0.85"/>
+  <!-- Left leg -->
+  <path d="M68 184 L62 280 Q62 288 68 288 L82 288 Q86 288 86 282 L90 184" fill="#D1D5DB"/>
+  <!-- Right leg -->
+  <path d="M110 184 L114 282 Q114 288 118 288 L132 288 Q138 288 138 280 L132 184" fill="#D1D5DB"/>
+</svg>

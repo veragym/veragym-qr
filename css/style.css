@@ -171,6 +171,11 @@ body {
   display: block;
 }
 
+.bp-img-wrap img {
+  object-fit: contain;
+  padding: 12px;
+}
+
 .card-placeholder,
 .bp-placeholder {
   position: absolute;
