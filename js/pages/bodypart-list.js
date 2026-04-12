@@ -1,6 +1,7 @@
 /* bodypart-list.js — 4-1p: 부위별 기구 목록 */
 
 function renderBodypartList(part) {
+  part = decodeURIComponent(part);
   var bp = null;
   for (var i = 0; i < BODYPARTS.length; i++) {
     if (BODYPARTS[i].id === part) { bp = BODYPARTS[i]; break; }
