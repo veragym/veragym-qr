@@ -44,9 +44,14 @@ function renderDetail(id, mode) {
     html += '<div id="detail-desc" class="detail-desc-collapsed">';
   }
 
-  // 기구 실사진
+  // 기구 실사진 (자식이면 부모 사진 사용 — 같은 기구)
+  var photoFile = eq.file_name;
+  if (eq.parent_id) {
+    var parentEq = getEquipmentById(eq.parent_id);
+    if (parentEq) photoFile = parentEq.file_name;
+  }
   html += '<div class="detail-photo-wrap">';
-  html += '<img src="images/photos/' + esc(eq.file_name) + '.png" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+  html += '<img src="images/photos/' + esc(photoFile) + '.png" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
   html += '</div>';
 
   // 기구 조절
