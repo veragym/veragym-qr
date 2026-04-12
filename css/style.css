@@ -275,9 +275,11 @@ body {
 
 .detail-photo-wrap {
   width: 100%;
-  aspect-ratio: 16/9;
+  aspect-ratio: 2/1;
   background: var(--color-surface-hover);
   overflow: hidden;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .detail-photo-wrap img {

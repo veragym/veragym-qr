@@ -44,10 +44,10 @@ function renderDetail(id, mode) {
     html += '<div id="detail-desc" class="detail-desc-collapsed">';
   }
 
-  // 실사진 — 추후 사용자 제공 사진으로 교체 예정 (현재 비움)
-  // html += '<div class="detail-photo-wrap">';
-  // html += '<img src="" alt="" loading="lazy">';
-  // html += '</div>';
+  // 기구 실사진
+  html += '<div class="detail-photo-wrap">';
+  html += '<img src="images/photos/' + esc(eq.file_name) + '.png" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+  html += '</div>';
 
   // 기구 조절
   if (eq.adjustment && eq.adjustment.length > 0) {
