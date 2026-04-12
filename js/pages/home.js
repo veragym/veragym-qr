@@ -6,7 +6,7 @@ function renderHome() {
   var app = document.getElementById('app');
 
   // 부위별 순서 정의, 각 부위 내에서 ㄱ~ㅎ 정렬
-  var partOrder = { '가슴': 0, '어깨': 1, '등': 2, '팔': 3, '하체': 4 };
+  var partOrder = { '가슴': 0, '어깨': 1, '등': 2, '팔': 3, '하체': 4, '코어': 5 };
   var sorted = EQUIPMENT.slice().sort(function (a, b) {
     var pa = partOrder[a.bodypartName] !== undefined ? partOrder[a.bodypartName] : 99;
     var pb = partOrder[b.bodypartName] !== undefined ? partOrder[b.bodypartName] : 99;

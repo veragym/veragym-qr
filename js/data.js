@@ -74,13 +74,14 @@ async function loadEquipmentFromDB() {
       };
     });
 
-    // BODYPARTS 고정 5개 카테고리
+    // BODYPARTS 고정 6개 카테고리
     BODYPARTS = [
       { id: '가슴', name: '가슴', emoji: '🫁' },
       { id: '어깨', name: '어깨', emoji: '🏋️' },
       { id: '등', name: '등', emoji: '🔙' },
       { id: '팔', name: '팔', emoji: '💪' },
-      { id: '하체', name: '하체', emoji: '🦵' }
+      { id: '하체', name: '하체', emoji: '🦵' },
+      { id: '코어', name: '코어', emoji: '🔥' }
     ];
     BODYPART_MAP = {};
     BODYPARTS.forEach(function (b) { BODYPART_MAP[b.id] = b.name; });
@@ -105,7 +106,8 @@ function mapBodypartCategory(part) {
     '팔': '팔',
     '하체 전체': '하체', '엉덩이': '하체',
     '허벅지 앞쪽': '하체', '허벅지 뒤쪽': '하체',
-    '허벅지 안쪽': '하체', '허벅지 바깥쪽': '하체'
+    '허벅지 안쪽': '하체', '허벅지 바깥쪽': '하체',
+    '코어': '코어', '복근': '코어', '복부': '코어'
   };
   return map[part] || part;
 }
