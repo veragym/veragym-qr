@@ -1165,7 +1165,7 @@ body {
   margin: 16px 0 0;
   padding-top: 14px;
   padding-left: 28px;
-  text-indent: -28px;
+  position: relative;
   border-top: 1px solid var(--color-border);
   font-size: 15px;
   color: var(--color-text-tertiary);
@@ -1174,7 +1174,11 @@ body {
 }
 
 .qr-emoji {
-  margin-right: 6px;
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 20px;
+  text-align: center;
   font-size: 15px;
 }
 
