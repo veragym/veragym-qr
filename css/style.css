@@ -1160,30 +1160,3 @@ body {
   margin-top: 8px;
 }
 
-/* ── QR 영상 안내 ── */
-.qr-video-guide {
-  margin: 16px 0 0;
-  padding-top: 14px;
-  padding-left: 28px;
-  position: relative;
-  border-top: 1px solid var(--color-border);
-  font-size: 15px;
-  color: var(--color-text-tertiary);
-  line-height: 24px;
-  word-break: keep-all;
-}
-
-.qr-emoji {
-  position: absolute;
-  left: 0;
-  top: 14px;
-  width: 20px;
-  text-align: center;
-  font-size: 15px;
-}
-
-.qr-pink {
-  color: #e84a7a;
-  font-weight: 700;
-}
-
