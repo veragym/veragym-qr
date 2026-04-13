@@ -80,8 +80,8 @@ function renderDetail(id, mode) {
     if (Array.isArray(eq.method)) {
       steps = eq.method;
     } else {
-      // "1. ... 2. ... 3. ..." 패턴을 분리
-      steps = eq.method.split(/(?=\d+\.\s)/).map(function (s) {
+      // "1.텍스트\n2.텍스트" 또는 "1. 텍스트\n2. 텍스트" 패턴을 분리
+      steps = eq.method.split(/\n/).map(function (s) {
         return s.replace(/^\d+\.\s*/, '').trim();
       }).filter(function (s) { return s; });
     }

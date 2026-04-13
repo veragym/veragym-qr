@@ -85,9 +85,9 @@ window.addEventListener('hashchange', router);
 
 document.addEventListener('DOMContentLoaded', async function () {
   try {
-    // QR 스캔 감지: ?branch= 파라미터가 있으면 새 세션 시작
+    // QR 스캔 감지: ?branch= 파라미터가 있으면 세션 시작 (이미 유효한 세션이 있으면 유지)
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('branch')) {
+    if (urlParams.has('branch') && !isSessionValid()) {
       startSession();
     }
 
