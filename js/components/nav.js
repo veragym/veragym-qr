@@ -26,20 +26,22 @@ function initNav() {
       location.hash = '#/records';
     } else if (tab === 'back') {
       // hash 히스토리가 있으면 뒤로, 없으면 홈으로
-      var prevHash = location.hash;
       var backHandled = false;
-      var onHashChange = function () {
-        backHandled = true;
-        window.removeEventListener('hashchange', onHashChange);
+      var cleanup = function () {
+        window.removeEventListener('popstate', onPop);
+        window.removeEventListener('hashchange', onHash);
       };
-      window.addEventListener('hashchange', onHashChange);
+      var onPop = function () { backHandled = true; cleanup(); };
+      var onHash = function () { backHandled = true; cleanup(); };
+      window.addEventListener('popstate', onPop);
+      window.addEventListener('hashchange', onHash);
       history.back();
       setTimeout(function () {
-        window.removeEventListener('hashchange', onHashChange);
+        cleanup();
         if (!backHandled || !location.hash || location.hash === '#') {
           location.hash = '#/home';
         }
-      }, 300);
+      }, 600);
     }
   });
 }

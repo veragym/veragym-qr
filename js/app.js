@@ -125,13 +125,11 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 });
 
-/* TODO: 배포 시 서비스워커 활성화 — service-worker.js의 STATIC_ASSETS에 Phase 2 파일 추가 후 활성화
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('service-worker.js').catch(function () {});
   });
 }
-*/
 /* SW 클린업 — 필요 시 수동 활성화
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function (regs) {
