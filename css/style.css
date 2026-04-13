@@ -1166,3 +1166,36 @@ body {
   font-weight: 300;
 }
 
+/* ── PT 인용문 ── */
+.pt-quote {
+  position: relative;
+  text-align: center;
+  padding: 32px 24px 28px;
+  margin: 8px 0 0;
+}
+
+.pt-quote p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.pt-quote-mark {
+  display: block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 56px;
+  line-height: 1;
+  color: rgba(59,130,246,0.08);
+  user-select: none;
+}
+
+.pt-quote-mark.open {
+  margin-bottom: 8px;
+}
+
+.pt-quote-mark.close {
+  margin-top: 8px;
+}
+
