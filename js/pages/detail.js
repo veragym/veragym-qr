@@ -93,7 +93,14 @@ function renderDetail(id, mode) {
       steps.forEach(function (m, i) {
         html += '<li><span class="method-num">' + (i + 1) + '</span>' + esc(m) + '</li>';
       });
-      html += '</ul></div></div>';
+      html += '</ul>';
+      // QR 영상 안내 (케이블, 컬벤치, 멀티플라이/레이즈, 리니어로우, 힙스러스트, V스쿼트, 로만체어, 친딥플렉서 제외)
+      var noQrVideo = ['misa-curl-bench','misa-ez-barbell-preacher-curl','misa-multi-fly-raise','misa-multi-fly','misa-multi-raise','misa-linear-row','misa-hip-thrust','misa-v-squat-dual','misa-v-squat','misa-reverse-v-squat','misa-roman-chair','misa-45-degrees-back-extension','misa-rounded-back-extension','misa-chin-dip-hip-flexer','misa-captains-chair-leg-raise','misa-captains-chair-straight-leg-raise','misa-hanging-leg-raise','misa-hanging-straight-leg-raise'];
+      var isCable = eq.id.indexOf('misa-cable-') === 0;
+      if (!isCable && noQrVideo.indexOf(eq.id) === -1) {
+        html += '<p class="qr-video-guide"><span class="qr-emoji">📱</span>기구에 <strong class="qr-pink">부착된 QR</strong>을 스캔하면 운동 영상을 확인하실 수 있습니다.</p>';
+      }
+      html += '</div></div>';
     }
   }
 

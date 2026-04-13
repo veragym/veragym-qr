@@ -1199,3 +1199,23 @@ body {
   margin-top: 8px;
 }
 
+/* ── QR 영상 안내 ── */
+.qr-video-guide {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: 15px;
+  color: var(--color-text-tertiary);
+  line-height: 24px;
+}
+
+.qr-emoji {
+  margin-right: 6px;
+  font-size: 15px;
+}
+
+.qr-pink {
+  color: #e84a7a;
+  font-weight: 700;
+}
+
