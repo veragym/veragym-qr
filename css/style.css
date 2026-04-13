@@ -401,12 +401,6 @@ body {
   text-align: center;
 }
 
-.method-text {
-  font: var(--text-body);
-  color: var(--color-text-secondary);
-  padding: var(--spacing-sm) 0;
-}
-
 .detail-illust-wrap {
   width: 100%;
   aspect-ratio: 2/1;
@@ -424,33 +418,6 @@ body {
 
 .detail-placeholder.illust {
   border-radius: 12px;
-}
-
-.method-list {
-  list-style: none;
-  counter-reset: method;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.method-list li {
-  counter-increment: method;
-  font: var(--text-body);
-  color: var(--color-text-primary);
-  padding-left: 28px;
-  position: relative;
-}
-
-.method-list li::before {
-  content: counter(method);
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-weight: 700;
-  color: var(--color-accent);
-  width: 20px;
-  text-align: center;
 }
 
 .muscle-group {
@@ -620,12 +587,6 @@ body {
   width: 100%;
   max-width: 340px;
   text-align: center;
-}
-
-.phone-title {
-  font: var(--text-section-title);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
 }
 
 .phone-desc {

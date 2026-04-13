@@ -1,4 +1,4 @@
-var CACHE_NAME = 'veragym-qr-v5';
+var CACHE_NAME = 'veragym-qr-v6';
 var STATIC_ASSETS = [
   './',
   './index.html',
@@ -8,11 +8,13 @@ var STATIC_ASSETS = [
   './js/app.js',
   './js/components/header.js',
   './js/components/nav.js',
+  './js/components/record-ui.js',
   './js/pages/notice.js',
   './js/pages/home.js',
   './js/pages/detail.js',
   './js/pages/bodypart.js',
   './js/pages/bodypart-list.js',
+  './js/pages/records.js',
   './manifest.json'
 ];
 

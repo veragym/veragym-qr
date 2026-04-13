@@ -229,6 +229,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
     }
 
     // Step 3: 음수 set_number를 양수로 변환
+    var updateFailed = false;
     for (var i = 0; i < sets.length; i++) {
       var upRes = await db.from('qr_workout_logs')
         .update({ set_number: i + 1 })
@@ -238,12 +239,36 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
         .eq('set_number', -(i + 1));
       if (upRes.error) {
         console.error('set_number update failed for set', i + 1, upRes.error);
-        throw upRes.error;
+        updateFailed = true;
+        break;
+      }
+    }
+
+    // Step 3 실패 시: 남은 음수 set_number를 양수로 일괄 정리
+    if (updateFailed) {
+      for (var j = 0; j < sets.length; j++) {
+        await db.from('qr_workout_logs')
+          .update({ set_number: j + 1 })
+          .eq('phone', phone)
+          .eq('equipment_id', equipmentId)
+          .eq('workout_date', date)
+          .eq('set_number', -(j + 1));
       }
     }
 
     return { data: null, error: null };
   } catch (e) {
+    // 예외 발생 시에도 음수 set_number 잔류 방지
+    try {
+      await db.from('qr_workout_logs')
+        .delete()
+        .eq('phone', phone)
+        .eq('equipment_id', equipmentId)
+        .eq('workout_date', date)
+        .lt('set_number', 0);
+    } catch (cleanupErr) {
+      console.error('cleanup negative set_numbers failed:', cleanupErr);
+    }
     console.error('updateWorkoutSets failed:', e);
     showToast('기록 수정에 실패했습니다. 다시 시도해주세요.');
     return { data: null, error: e };
