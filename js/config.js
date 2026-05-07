@@ -118,8 +118,13 @@ function renderExpiredScreen() {
 async function upsertMember(phone) {
   if (!db) return { data: null, error: { message: 'DB not initialized' } };
   try {
+    // 회원은 phone PK 통합 운영 (한 사람이 양쪽 매장 다닐 수 있음).
+    // branch 는 첫 등록 매장만 기록, 같은 phone 재등록 시 덮어쓰지 않음.
     return await db.from('qr_members')
-      .upsert({ phone: phone }, { onConflict: 'phone' });
+      .upsert(
+        { phone: phone, branch: getCurrentBranch() },
+        { onConflict: 'phone', ignoreDuplicates: false }
+      );
   } catch (e) {
     console.error('upsertMember failed:', e);
     return { data: null, error: e };
@@ -129,9 +134,11 @@ async function upsertMember(phone) {
 async function checkMemberExists(phone) {
   if (!db) return { exists: false, count: 0 };
   try {
+    // 매장별 운동 이력만 검사 (다른 매장에서 운동했어도 이 매장 첫 방문이면 신규로 인식)
     var res = await db.from('qr_workout_logs')
       .select('id', { count: 'exact', head: true })
-      .eq('phone', phone);
+      .eq('phone', phone)
+      .eq('branch', getCurrentBranch());
     if (!res.error) {
       return { exists: res.count > 0, count: res.count || 0 };
     }
@@ -145,6 +152,7 @@ async function saveWorkoutSets(phone, equipmentId, date, sets, weightMode) {
   if (!db) return { data: null, error: { message: 'DB not initialized' } };
   weightMode = weightMode || 'total';
   try {
+    var branch = getCurrentBranch();
     var rows = sets.map(function (s, i) {
       return {
         phone: phone,
@@ -153,7 +161,8 @@ async function saveWorkoutSets(phone, equipmentId, date, sets, weightMode) {
         set_number: i + 1,
         weight_kg: parseFloat(s.weight) || 0,
         reps: parseInt(s.reps) || 0,
-        weight_mode: weightMode
+        weight_mode: weightMode,
+        branch: branch
       };
     });
     return await db.from('qr_workout_logs').insert(rows);
@@ -169,6 +178,7 @@ async function getWorkoutLogs(phone, equipmentId) {
     .select('*')
     .eq('phone', phone)
     .eq('equipment_id', equipmentId)
+    .eq('branch', getCurrentBranch())
     .order('workout_date', { ascending: false })
     .order('set_number', { ascending: true })
     .limit(500);
@@ -186,7 +196,8 @@ async function checkTodayRecord(phone, equipmentId, date) {
       .select('id', { count: 'exact', head: true })
       .eq('phone', phone)
       .eq('equipment_id', equipmentId)
-      .eq('workout_date', date);
+      .eq('workout_date', date)
+      .eq('branch', getCurrentBranch());
     if (!res.error && res.count > 0) return true;
   } catch (e) {
     console.error('checkTodayRecord failed:', e);
@@ -198,6 +209,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
   if (!db) return { data: null, error: { message: 'DB not initialized' } };
   weightMode = weightMode || 'total';
   try {
+    var branch = getCurrentBranch();
     // 안전한 순서: 신규 세트 먼저 삽입 (임시 날짜) → 기존 삭제 → 날짜 복원
     // Supabase는 클라이언트 트랜잭션을 지원하지 않으므로, 삭제 실패 시 데이터 보존을 위해
     // insert → delete 순서로 진행
@@ -209,7 +221,8 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
         set_number: -(i + 1),
         weight_kg: parseFloat(s.weight) || 0,
         reps: parseInt(s.reps) || 0,
-        weight_mode: weightMode
+        weight_mode: weightMode,
+        branch: branch
       };
     });
 
@@ -223,6 +236,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
       .eq('phone', phone)
       .eq('equipment_id', equipmentId)
       .eq('workout_date', date)
+      .eq('branch', branch)
       .gt('set_number', 0);
     if (delRes.error) {
       console.error('delete old sets failed, but new sets are saved:', delRes.error);
@@ -236,6 +250,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
         .eq('phone', phone)
         .eq('equipment_id', equipmentId)
         .eq('workout_date', date)
+        .eq('branch', branch)
         .eq('set_number', -(i + 1));
       if (upRes.error) {
         console.error('set_number update failed for set', i + 1, upRes.error);
@@ -252,6 +267,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
           .eq('phone', phone)
           .eq('equipment_id', equipmentId)
           .eq('workout_date', date)
+          .eq('branch', branch)
           .eq('set_number', -(j + 1));
       }
     }
@@ -265,6 +281,7 @@ async function updateWorkoutSets(phone, equipmentId, date, sets, weightMode) {
         .eq('phone', phone)
         .eq('equipment_id', equipmentId)
         .eq('workout_date', date)
+        .eq('branch', getCurrentBranch())
         .lt('set_number', 0);
     } catch (cleanupErr) {
       console.error('cleanup negative set_numbers failed:', cleanupErr);
@@ -282,7 +299,8 @@ async function deleteWorkoutDate(phone, equipmentId, date) {
       .delete()
       .eq('phone', phone)
       .eq('equipment_id', equipmentId)
-      .eq('workout_date', date);
+      .eq('workout_date', date)
+      .eq('branch', getCurrentBranch());
   } catch (e) {
     console.error('deleteWorkoutDate failed:', e);
     return { data: null, error: e };
