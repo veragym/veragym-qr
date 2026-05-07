@@ -409,6 +409,44 @@ body {
   background: var(--color-surface-hover);
 }
 
+/* 기구 변환 GIF 갤러리 — 듀얼 머신 전용 */
+.setup-gifs-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.setup-gif-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-surface-hover);
+}
+
+.setup-gif-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.setup-gif-num {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 14px;
+  z-index: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 .detail-illust-wrap img {
   width: 100%;
   height: 100%;

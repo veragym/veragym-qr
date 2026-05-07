@@ -54,6 +54,20 @@ function renderDetail(id, mode) {
   html += '<img src="images/photos/' + esc(photoFile) + '.png" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
   html += '</div>';
 
+  // 기구 변환 방법 (듀얼 머신 전용 — setup_gifs 가 있을 때만 표시)
+  if (eq.setupGifs && eq.setupGifs.length > 0) {
+    html += '<div class="detail-section">';
+    html += '<h2 class="section-title">기구 변환 방법</h2>';
+    html += '<div class="setup-gifs-list">';
+    eq.setupGifs.forEach(function (file, i) {
+      html += '<div class="setup-gif-item">';
+      html += '<span class="setup-gif-num">' + (i + 1) + '</span>';
+      html += '<img src="images/setup-gifs/' + esc(file) + '" alt="' + esc(eq.name) + ' 변환 ' + (i + 1) + '" loading="lazy">';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  }
+
   // 기구 조절
   if (eq.adjustment && eq.adjustment.length > 0) {
     html += '<div class="detail-section">';

@@ -71,7 +71,9 @@ async function loadEquipmentFromDB() {
         illustration: 'images/illustrations/' + row.file_name + '.png',
         adjustment: row.adjustments || [],
         trainerTips: row.trainer_tips || [],
-        parent_id: row.parent_id || null
+        parent_id: row.parent_id || null,
+        // 듀얼 머신 변환 GIF 파일명 배열 (없으면 빈 배열 → 섹션 숨김)
+        setupGifs: row.setup_gifs || []
       };
     });
 
