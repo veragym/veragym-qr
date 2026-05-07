@@ -15,14 +15,22 @@ var _equipmentLoaded = false;
 /* ── 지점(branch) 관리 ── */
 
 function getCurrentBranch() {
-  // URL에서 ?branch=misa 파라미터 확인
+  // 1. URL ?branch= 파라미터 우선 (수동 전환·테스트용)
   var params = new URLSearchParams(window.location.search);
   var branch = params.get('branch');
   if (branch) {
     localStorage.setItem('veragym_qr_branch', branch);
     return branch;
   }
-  // localStorage fallback
+  // 2. 별도 repo 배포 자동 감지 (path 또는 hostname 으로 매장 결정)
+  //    - veragym.github.io/veragym-qr/         → misa (기본)
+  //    - veragym.github.io/veragym-qr-dongtan/ → dongtan
+  if (location.pathname.indexOf('/veragym-qr-dongtan') === 0
+      || location.hostname.indexOf('-dongtan') >= 0) {
+    localStorage.setItem('veragym_qr_branch', 'dongtan');
+    return 'dongtan';
+  }
+  // 3. localStorage fallback (이전 세션 복원)
   return localStorage.getItem('veragym_qr_branch') || 'misa';
 }
 
