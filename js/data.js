@@ -73,7 +73,9 @@ async function loadEquipmentFromDB() {
         trainerTips: row.trainer_tips || [],
         parent_id: row.parent_id || null,
         // 듀얼 머신 변환 GIF 파일명 배열 (없으면 빈 배열 → 섹션 숨김)
-        setupGifs: row.setup_gifs || []
+        setupGifs: row.setup_gifs || [],
+        // GIF 캡션 (인덱스 매칭, 없으면 빈 배열)
+        setupGifCaptions: row.setup_gif_captions || []
       };
     });
 

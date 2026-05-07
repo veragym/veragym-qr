@@ -60,9 +60,15 @@ function renderDetail(id, mode) {
     html += '<h2 class="section-title">기구 변환 방법</h2>';
     html += '<div class="setup-gifs-list">';
     eq.setupGifs.forEach(function (file, i) {
+      var caption = (eq.setupGifCaptions && eq.setupGifCaptions[i]) || '';
       html += '<div class="setup-gif-item">';
+      html += '<div class="setup-gif-media">';
       html += '<span class="setup-gif-num">' + (i + 1) + '</span>';
       html += '<img src="images/setup-gifs/' + esc(file) + '" alt="' + esc(eq.name) + ' 변환 ' + (i + 1) + '" loading="lazy">';
+      html += '</div>';
+      if (caption) {
+        html += '<p class="setup-gif-caption">' + esc(caption) + '</p>';
+      }
       html += '</div>';
     });
     html += '</div></div>';

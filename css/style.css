@@ -417,13 +417,19 @@ body {
 }
 
 .setup-gif-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setup-gif-media {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
   background: var(--color-surface-hover);
 }
 
-.setup-gif-item img {
+.setup-gif-media img {
   width: 100%;
   height: auto;
   display: block;
@@ -445,6 +451,15 @@ body {
   font-size: 14px;
   z-index: 1;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.setup-gif-caption {
+  margin: 0;
+  padding: 0 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+  word-break: keep-all;
 }
 
 .detail-illust-wrap img {
