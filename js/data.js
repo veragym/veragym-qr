@@ -37,9 +37,11 @@ async function loadEquipmentFromDB() {
   var branch = getCurrentBranch();
 
   try {
+    // 멀티 매장 구조: branches text[] 가 현재 지점을 포함하는 row 만
+    // (구 단일 branch 컬럼 → branches 배열로 통합)
     var res = await db.from('qr_equipment')
       .select('*')
-      .eq('branch', branch)
+      .contains('branches', [branch])
       .eq('is_active', true)
       .order('sort_order', { ascending: true });
 
