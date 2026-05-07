@@ -85,9 +85,12 @@ window.addEventListener('hashchange', router);
 
 document.addEventListener('DOMContentLoaded', async function () {
   try {
-    // QR 스캔 감지: ?branch= 파라미터가 있으면 세션 시작 (이미 유효한 세션이 있으면 유지)
+    // QR 스캔 감지: ?branch= 파라미터 또는 매장 전용 도메인(path/hostname) 진입 시 세션 시작
+    // (이미 유효한 세션이 있으면 유지)
     var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('branch') && !isSessionValid()) {
+    var isBranchDomain = location.pathname.indexOf('/veragym-qr-dongtan') === 0
+      || location.hostname.indexOf('-dongtan') >= 0;
+    if ((urlParams.has('branch') || isBranchDomain) && !isSessionValid()) {
       startSession();
     }
 
