@@ -1,4 +1,4 @@
-var CACHE_NAME = 'veragym-qr-v21';
+var CACHE_NAME = 'veragym-qr-v22';
 var STATIC_ASSETS = [
   './',
   './index.html',
@@ -75,10 +75,12 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  // Static assets: Cache First, fallback to network
+  // Static assets (HTML/JS/CSS): Stale-While-Revalidate
+  // 캐시 즉시 표시 + 백그라운드에서 새 버전 fetch → 다음 진입 시 자동 갱신
+  // (이전 Cache-First 는 config.js / detail.js 갱신 시 영구히 옛 버전 표시)
   e.respondWith(
     caches.match(e.request).then(function (cached) {
-      return cached || fetch(e.request).then(function (resp) {
+      var networkFetch = fetch(e.request).then(function (resp) {
         if (resp.ok) {
           var clone = resp.clone();
           caches.open(CACHE_NAME).then(function (cache) {
@@ -86,7 +88,10 @@ self.addEventListener('fetch', function (e) {
           });
         }
         return resp;
+      }).catch(function () {
+        return cached;
       });
+      return cached || networkFetch;
     })
   );
 });
