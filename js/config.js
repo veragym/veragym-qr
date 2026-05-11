@@ -5,7 +5,7 @@ var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 var db = null;
 
 // 이미지 캐시 버전 — 사진 교체 시 +1 (브라우저/CDN/SW 캐시 무효화용)
-var IMG_VERSION = '23';
+var IMG_VERSION = '24';
 
 function initDB() {
   if (!window.supabase) {
