@@ -1,4 +1,4 @@
-var CACHE_NAME = 'veragym-qr-v18';
+var CACHE_NAME = 'veragym-qr-v19';
 var STATIC_ASSETS = [
   './',
   './index.html',
@@ -52,12 +52,12 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  // Images: Cache First
+  // Images: Stale-While-Revalidate (캐시 즉시 표시 + 백그라운드에서 새 버전 갱신)
+  // 이전 Cache-First 는 사진 교체 시 영구히 옛 버전 표시 문제 → 자동 자가갱신 정책으로 변경
   if (e.request.destination === 'image') {
     e.respondWith(
       caches.match(e.request).then(function (cached) {
-        if (cached) return cached;
-        return fetch(e.request).then(function (resp) {
+        var networkFetch = fetch(e.request).then(function (resp) {
           if (resp.ok) {
             var clone = resp.clone();
             caches.open(CACHE_NAME).then(function (cache) {
@@ -66,8 +66,10 @@ self.addEventListener('fetch', function (e) {
           }
           return resp;
         }).catch(function () {
-          return new Response('', { status: 404 });
+          return cached || new Response('', { status: 404 });
         });
+        // 캐시 있으면 즉시 반환 (백그라운드에서 갱신), 없으면 네트워크 대기
+        return cached || networkFetch;
       })
     );
     return;
