@@ -51,7 +51,7 @@ function renderDetail(id, mode) {
     if (parentEq) photoFile = parentEq.file_name;
   }
   html += '<div class="detail-photo-wrap">';
-  html += '<img src="images/photos/' + esc(photoFile) + '.png" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+  html += '<img src="images/photos/' + esc(photoFile) + '.png?v=' + IMG_VERSION + '" alt="' + esc(eq.name) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
   html += '</div>';
 
   // 기구 변환 방법 (듀얼 머신 전용 — setup_gifs 가 있을 때만 표시)
@@ -64,7 +64,7 @@ function renderDetail(id, mode) {
       html += '<div class="setup-gif-item">';
       html += '<div class="setup-gif-media">';
       html += '<span class="setup-gif-num">' + (i + 1) + '</span>';
-      html += '<img src="images/setup-gifs/' + esc(file) + '" alt="' + esc(eq.name) + ' 변환 ' + (i + 1) + '" loading="lazy">';
+      html += '<img src="images/setup-gifs/' + esc(file) + '?v=' + IMG_VERSION + '" alt="' + esc(eq.name) + ' 변환 ' + (i + 1) + '" loading="lazy">';
       html += '</div>';
       if (caption) {
         html += '<p class="setup-gif-caption">' + esc(caption) + '</p>';

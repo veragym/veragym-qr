@@ -4,6 +4,9 @@ var SUPABASE_URL = 'https://lrzffwawpoidimlrbfxe.supabase.co';
 var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyemZmd2F3cG9pZGltbHJiZnhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNDc0MjAsImV4cCI6MjA4OTcyMzQyMH0._AIkOKdjtOHC-igxg9toc-rq10KM3HVkjrgr1LOw-OI';
 var db = null;
 
+// 이미지 캐시 버전 — 사진 교체 시 +1 (브라우저/CDN/SW 캐시 무효화용)
+var IMG_VERSION = '20';
+
 function initDB() {
   if (!window.supabase) {
     console.error('Supabase library not loaded. Check network/CDN.');
