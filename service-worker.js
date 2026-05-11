@@ -1,4 +1,4 @@
-var CACHE_NAME = 'veragym-qr-v17';
+var CACHE_NAME = 'veragym-qr-v18';
 var STATIC_ASSETS = [
   './',
   './index.html',
