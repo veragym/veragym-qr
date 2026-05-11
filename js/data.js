@@ -63,17 +63,9 @@ async function loadEquipmentFromDB() {
       return false;
     }
 
-    // 부모 row 빠른 조회용 dict (자식 카드 이미지 = 부모 file_name 사용)
-    var rowsById = {};
-    res.data.forEach(function (r) { rowsById[r.id] = r; });
-
     // DB 데이터 → 앱 형식으로 변환
     EQUIPMENT = res.data.map(function (row) {
       var category = mapBodypartCategory(row.bodypart || '');
-      // 자식이면 카드 썸네일은 부모 file_name 사용 (같은 머신을 변형 운동만 다르게)
-      // 일러스트는 자기 file_name 그대로 (변형 운동마다 다른 일러스트)
-      var parentRow = row.parent_id ? rowsById[row.parent_id] : null;
-      var cardFile = parentRow ? parentRow.file_name : row.file_name;
       return {
         id: row.id,
         name: row.name,
@@ -85,7 +77,7 @@ async function loadEquipmentFromDB() {
         primaryMuscle: row.primary_muscle || '',
         secondaryMuscle: row.secondary_muscle || '',
         method: row.method || '',
-        image: 'images/equipment/' + cardFile + '.png?v=' + IMG_VERSION,
+        image: 'images/equipment/' + row.file_name + '.png?v=' + IMG_VERSION,
         illustration: 'images/illustrations/' + row.file_name + '.png?v=' + IMG_VERSION,
         adjustment: row.adjustments || [],
         trainerTips: row.trainer_tips || [],
